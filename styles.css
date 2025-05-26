@@ -1,0 +1,33 @@
+/* Estilo general del contenedor del formulario */
+
+div[data-testid="stForm"]
+{
+    background-color: rgb(105, 187, 222);
+
+}
+
+/* Cambiar el color de la etiqueta */
+
+div[data-testid="stForm"]
+label
+{
+    color:black !important; 
+}
+
+/* Estilo de campo de texto */
+
+div[data-testid="stForm"]
+input
+{
+    background-color: rgb(168, 219, 245);
+    color:black;
+}
+
+/* Botón */
+
+div[data-testid="stForm"]
+button
+{
+    background-color: rgb(63, 114, 182);
+    color: white
+}
