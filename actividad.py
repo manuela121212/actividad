@@ -75,16 +75,17 @@ def verificar_requisitos(password):
     return requisitos
 
 #función para verificar si ya existe el estudiante
-def verificar_estudiante(nombre, password):
+def verificar_estudiante(nombre, correo, password):
     conexion = sqlite3.connect('uni.db')
     cursor = conexion.cursor()
 
-    cursor.execute("SELECT id, password FROM ESTUDIANTES WHERE nombre = ?", (nombre,))
+    # busca que coincida el usuario y el correo 
+    cursor.execute("SELECT password FROM ESTUDIANTES WHERE nombre = ? AND correo = ?", (nombre,correo))
     resultado = cursor.fetchone()
     conexion.close()
 
     if resultado:
-        return resultado[1] == password #¿La contraseña que está guardada es igual a la que escribió el usuario?
+        return resultado[0] == password #¿La contraseña que está guardada es igual a la que escribió el usuario?
     else:
         return None
     
@@ -138,11 +139,11 @@ elif seleccion == 'Formulario de ingreso - Registro':
                 st.warning('Por favor completa todos los campos')
                 registrar_accion(usuario_login, accion='Intento de sesión con campos vacíos')
             else:
-                validacion = verificar_estudiante(usuario_login, password_login)
+                validacion = verificar_estudiante(usuario_login, correo_login, password_login)
 
                 if validacion is None:
-                    st.error('Usuario no registrado')
-                    registrar_accion(usuario_login, accion='Intento de sesión con usuario no registrado')
+                    st.error('Usuario no registrado o correo incorrecto')
+                    registrar_accion(usuario_login, accion='Intento de sesión con usuario no registrado o correo incorrecto')
                 elif validacion:
                     st.success(f'Bienvenid@ {usuario_login}')
                     registrar_accion(usuario_login, accion='Sesión iniciada con éxito')
@@ -204,7 +205,7 @@ elif seleccion == 'BBDD':
 
     if archivo_db and constrasena_visualizar:
         if constrasena_visualizar == clave_correcta:
-            
+
             # guardar el archivo subido
             ruta_temporal = 'subida_temp.db'
             with open(ruta_temporal, 'wb') as f:
