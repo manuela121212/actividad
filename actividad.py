@@ -179,16 +179,20 @@ elif seleccion == 'Formulario de ingreso - Registro':
         if enviar_registro:
             if usuario_registro.strip() == '' or correo_registro.strip() == '' or password_registro.strip() == '':
                 st.warning('Por favor completa todos los campos')
+                registrar_accion(usuario_registro, accion='Intento de registro con campos vacíos')
 
             elif not all(verificar_requisitos(password_registro).values()):
                 st.error('Requisitos no cumplidos')
+                registrar_accion(usuario_registro, accion='Intento de registro con contraseña sin todos los requerimientos')
 
             elif registrar_estudiante(usuario_registro, correo_registro, password_registro):
                 st.success(f'Usuario {usuario_registro} creado con éxito')
                 st.session_state.mostrar_registro = False
+                registrar_accion(usuario_registro, accion='Registro con éxito')
 
             else:
                 st.error('El usuario ya existe en la BBDD')
+                registrar_accion(usuario_registro, accion='Intento de registro con usuario ya existente')
         
         if st.button('¿Ya tienes cuenta? Inicia sesión'):
             st.session_state.mostrar_registro = False
