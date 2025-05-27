@@ -50,17 +50,15 @@ cargar_css('styles.css')
 def registrar_estudiante(nombre, correo, password):
     conexion = sqlite3.connect('uni.db')
     cursor = conexion.cursor()
-    #fecha = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 
     # verificar si ya existe un estudiante con esos datos
-    cursor.execute("SELECT id FROM ESTUDIANTES WHERE nombre = ? AND correo = ? AND password = ?", (nombre, correo, password))
+    cursor.execute("SELECT id FROM ESTUDIANTES WHERE nombre = ? OR correo = ? ", (nombre, correo))
     if cursor.fetchone():
         conexion.close()
         return False # significa que ya existe 
 
     # insertar nuevo estudiante
     cursor.execute("INSERT INTO ESTUDIANTES (nombre, correo, password) VALUES (?,?,?)", (nombre, correo, password))
-
     conexion.commit()
     conexion.close()
     return True
@@ -90,6 +88,7 @@ def verificar_estudiante(nombre, password):
     else:
         return None
     
+# función para el historial
 def registrar_accion(usuario, accion):
     conexion = sqlite3.connect('uni.db')
     cursor = conexion.cursor()
@@ -205,6 +204,7 @@ elif seleccion == 'BBDD':
 
     if archivo_db and constrasena_visualizar:
         if constrasena_visualizar == clave_correcta:
+            
             # guardar el archivo subido
             ruta_temporal = 'subida_temp.db'
             with open(ruta_temporal, 'wb') as f:
@@ -242,4 +242,5 @@ elif seleccion == 'Historial':
         st.dataframe(df_historial)
     else:
         st.info('No hay acciones registradas aún')
+
 
